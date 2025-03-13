@@ -11,9 +11,11 @@
  
  static volatile bool fired = false;
  
- static void alarm_callback(void) {
-     fired = true;
- }
+ int64_t alarm_callback(alarm_id_t id, void *user_data) {
+    fired = true;
+    // Can return a value here in us to fire in the future
+    return 0;
+}
 
  const int ECHO_PIN = 6;
  const int TRIG_PIN = 7;
@@ -68,22 +70,11 @@ void send_trig_pulse(){
      // Start the RTC
      rtc_init();
      rtc_set_datetime(&t);
- 
-     // Alarm once a minute
-     datetime_t alarm = {
-         .year  = -1,
-         .month = -1,
-         .day   = -1,
-         .dotw  = -1,
-         .hour  = -1,
-         .min   = -1,
-         .sec   = 00
-     };
-     rtc_set_alarm(&alarm, &alarm_callback);
+     alarm_id_t alarm ;
      // Alarm will keep firing forever
      while(1){
+        alarm = add_alarm_in_ms(5000, alarm_callback, NULL, false);    
         send_trig_pulse();
-        rtc_enable_alarm();
          if (fired) {
              fired = 0;
              datetime_t t = {0};
@@ -95,7 +86,7 @@ void send_trig_pulse(){
             }
          if(!fired){
             if(echo_got){
-                rtc_disable_alarm();
+                cancel_alarm(alarm);
                 uint32_t delta_t;
                 while(end_us == 0  ){
                     delta_t = end_us - start_us;
@@ -107,7 +98,7 @@ void send_trig_pulse(){
                 char datetime_buf[256];
                 char *datetime_str = &datetime_buf[0];
                 datetime_to_str(datetime_str, sizeof(datetime_buf), &t);
-                printf("%s - %f cm \n",datetime_str,distancia);
+                printf("%s - %.2f cm \n",datetime_str,distancia);
                 echo_got = false;
             }
          }

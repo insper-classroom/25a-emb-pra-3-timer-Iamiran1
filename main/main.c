@@ -19,7 +19,7 @@
  const int ECHO_PIN = 6;
  const int TRIG_PIN = 7;
 
- bool echo_got = false;
+ volatile bool echo_got = false;
  volatile uint32_t start_us;
  volatile uint32_t end_us;
 
@@ -72,7 +72,7 @@ void send_trig_pulse(){
      rtc_set_datetime(&t);
      alarm_id_t alarm ;
      // Alarm will keep firing forever
-     while(1){
+     while(1){ //A
         if(getchar_timeout_us (100) == 65 ){
             while(true){
         alarm = add_alarm_in_ms(5000, alarm_callback, NULL, false);    

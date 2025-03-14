@@ -72,7 +72,7 @@ void send_trig_pulse(){
      rtc_set_datetime(&t);
      alarm_id_t alarm ;
      // Alarm will keep firing forever
-     while(1){ //A
+     while(1){
         if(getchar_timeout_us (100) == 65 ){
             while(true){
         alarm = add_alarm_in_ms(5000, alarm_callback, NULL, false);    
@@ -90,7 +90,7 @@ void send_trig_pulse(){
                 cancel_alarm(alarm);
                 uint32_t delta_t;
                 while(end_us == 0  ){
-                    end_us = 0;
+                    delta_t = end_us - start_us;
                 }
                 delta_t = end_us - start_us;
                 float distancia = (float) delta_t * 0.017015;

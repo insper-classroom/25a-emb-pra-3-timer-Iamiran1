@@ -8,7 +8,6 @@
  #include "hardware/rtc.h"
  #include "pico/stdlib.h"
  #include "pico/util/datetime.h"
- 
  static volatile bool fired = false;
  
  int64_t alarm_callback(alarm_id_t id, void *user_data) {
@@ -42,6 +41,7 @@ void send_trig_pulse(){
     gpio_put(TRIG_PIN,0);
 }
  int main() {
+
     sleep_ms(1000);
      stdio_init_all();
      printf("RTC Alarm Repeat!\n");
@@ -73,6 +73,8 @@ void send_trig_pulse(){
      alarm_id_t alarm ;
      // Alarm will keep firing forever
      while(1){
+        if(getchar_timeout_us (100) == 65 ){
+            while(true){
         alarm = add_alarm_in_ms(5000, alarm_callback, NULL, false);    
         send_trig_pulse();
          if (fired) {
@@ -102,6 +104,10 @@ void send_trig_pulse(){
                 echo_got = false;
             }
          }
- 
+         if(getchar_timeout_us (100) == 66){
+            break;
+         }
      }
+    }
+    }
  }

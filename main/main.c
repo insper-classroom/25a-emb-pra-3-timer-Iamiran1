@@ -71,8 +71,6 @@ void send_trig_pulse(){
      rtc_init();
      rtc_set_datetime(&t);
      alarm_id_t alarm ;
-     datetime_t t = {0,0,0,0,0,0,0};
-
      // Alarm will keep firing forever
      while(1){ //A
         if(getchar_timeout_us (100) == 65 ){

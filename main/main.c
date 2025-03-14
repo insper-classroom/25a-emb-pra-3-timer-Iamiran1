@@ -79,7 +79,7 @@ void send_trig_pulse(){
         send_trig_pulse();
          if (fired) {
              fired = 0;
-             datetime_t t = {0};
+             datetime_t t = {0,0,0,0,0,0,0};
              rtc_get_datetime(&t);
              char datetime_buf[256];
              char *datetime_str = &datetime_buf[0];
@@ -95,7 +95,7 @@ void send_trig_pulse(){
                 }
                 delta_t = end_us - start_us;
                 float distancia = (float) delta_t * 0.017015;
-                datetime_t t = {0};
+                datetime_t t = {0,0,0,0,0,0,0};
                 rtc_get_datetime(&t);
                 char datetime_buf[256];
                 char *datetime_str = &datetime_buf[0];
